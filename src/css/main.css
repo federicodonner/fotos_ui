@@ -1,50 +1,3 @@
-.scrollable {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
-  background-color: #eeeeee;
-}
-
-.pretty-form .form-input .label {
-  display: block;
-}
-
-.pretty-form .pretty-submit {
-  font-weight: 600;
-  font-size: 12pt;
-  color: white;
-  margin-left: 36vw;
-  margin-top: 2vh;
-}
-
-.pretty-input {
-  margin-bottom: 30px;
-  width: 82%;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 400px;
-  display: block;
-}
-
-.pretty-text {
-  width: 77%;
-  border: 1px #aab1b7 solid;
-  font-size: 14pt;
-  padding: 3px 3px 3px 11px;
-}
-
-a,
-a:visited,
-a:hover,
-a:active {
-  text-decoration: none;
-  color: red;
-  font-size: 16pt;
-  font-weight: 600;
-}
-
 html,
 body,
 div,
@@ -141,15 +94,6 @@ button {
   -webkit-text-size-adjust: none;
 }
 
-p {
-  text-rendering: optimizeLegibility;
-}
-
-strong {
-  font-weight: 700;
-}
-
-.cover,
 #main,
 html,
 body {
@@ -157,9 +101,6 @@ body {
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
-  background-repeat-y: repeat;
-  background-repeat-x: repeat;
-  background-size: 22%;
   background-attachment: local;
   position: relative;
   width: 100%;
@@ -170,192 +111,49 @@ body {
   box-sizing: border-box;
 }
 
-body {
-  font-family: "Montserrat", sans-serif;
+.nav {
+  display: none !important;
 }
 
-.loader {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  display: inherit;
+
+.slide-container {
+  margin: auto; }
+
+h3 {
+  text-align: center; }
+
+.each-slide > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  height: 300px;
 }
 
-.p .app-view .view-content.show {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition: transform 450ms ease-out, opacity 400ms ease-out;
-}
-
-p {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-p.indent {
-  margin-left: 40px;
-}
-
-p.centrado {
+.each-slide span {
+  padding: 20px;
+  font-size: 20px;
+  background: #efefef;
   text-align: center;
 }
 
-p.importante {
-  border: solid 10px #fdbb59;
-  padding: 16px;
-  font-weight: 600;
-  text-align: center;
+.each-fade {
+  display: flex;
 }
 
-.albus {
-  font-family: "Allura", cursive;
-  font-size: 25pt;
-  background-image: url(/images/subrayadoamarillo.jpg);
-  background-repeat: repeat-x;
-  background-position-y: 72%;
-  padding-right: 5px;
-  padding-left: 5px;
+.each-fade .image-container {
+  overflow: hidden;
 }
 
-.header {
-  margin-bottom: 30px;
-}
-
-.logo {
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  margin-left: auto;
-  margin-right: auto;
-  height: 75px;
-  background-image: url(/images/logo.png);
-}
-
-.logo:after {
-  content: "";
-  display: block;
-}
-
-.content {
-  background-color: white;
-  width: 820px;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 10px;
-  padding: 20px 40px 20px 40px;
-}
-
-.subrayado {
-  background-image: url(/images/subrayadoamarillo.jpg);
-  background-repeat: repeat-x;
-  background-position-y: 114%;
-  width: fit-content;
-}
-
-.negrita {
-  font-weight: 500;
-}
-
-.cursiva{
-  font-style: italic;
-}
-
-.renglon {
-  display: block;
-}
-
-.boton {
-  background-color: #fdbb59;
-  padding: 15px 25px 15px 25px;
-  border-radius: 10px;
-  font-weight: 600;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.derecha {
-  display: table;
-  margin-left: auto;
-  margin-right: 23px;
-}
-
-.inputrespuesta {
-  border-color: #fdbb59;
+.each-fade .image-container img {
   width: 100%;
-  margin-bottom: 50px;
-  border-radius: 10px;
-  font-size: 10pt;
 }
 
-.inputrespondida {
-  border-color: #d9dd92;
-}
-
-.imagenpregunta {
-  max-width: 850px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  margin-bottom: 10px;
-}
-
-.newLine {
-  display: block;
-}
-
-.subrayadoNumero {
-  background-image: url(/images/subrayadoamarillo.jpg);
-  background-repeat: repeat-x;
-  background-position-y: 114%;
-  font-size: 11pt;
-  margin-right: 10px;
-  font-weight: 600;
-}
-
-.respondidaNumero {
-  background-image: url(/images/subrayadoverde.jpg);
-}
-
-.pregunta {
-  width: 824px;
-  padding: 10px 36px;
-  position: relative;
-  left: -40px;
-}
-
-.preguntaNoRespondida {
-  border-left: 4px solid #fdbb59;
-}
-
-.preguntaRespondida {
-  border-left: 4px solid #d9dd92;
-}
-
-.pregunta-correccion {
-  margin-bottom: 40px;
-  border-bottom: 1px solid #fdbb59;
-  padding-bottom: 20px;
-}
-
-.respuesta-alumno {
-  font-style: italic;
-  padding: 0px 30px;
-  font-weight: 600;
-  margin-bottom: 40px;
-}
-
-.no-respondida {
-  background-color: #8e1b1f;
-  color: white;
-  padding: 0 10px 0 10px;
-  width: fit-content;
-}.link-texto {
-  color: #8e1b1f;
-  cursor: pointer;
-}
-
-.link-texto {
-  color: #8e1b1f;
-  cursor: pointer;
+.each-fade h2 {
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  background: #adceed;
 }

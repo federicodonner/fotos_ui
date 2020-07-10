@@ -19,7 +19,8 @@
     "react-star-rating-component": "^1.4.1",
     "react-transition-group": "^2.2.1",
     "serve": "^10.1.1",
-    "stylus": "0.54.5"
+    "stylus": "0.54.5",
+    "react-slideshow-image": "^0"
   },
   "scripts": {
     "dev": "react-scripts start",
