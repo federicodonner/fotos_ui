@@ -10,7 +10,7 @@ export function getData(endpoint) {
       method: "GET",
     }),
     new Promise(function (resolve, reject) {
-      setTimeout(() => reject(new Error("request timeout")), 15000);
+      setTimeout(() => reject(new Error("request timeout")), 30000);
     }),
   ]);
   return promise;

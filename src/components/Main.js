@@ -7,21 +7,9 @@ class Main extends React.Component {
     loader: true,
   };
 
-  procesarFotos = () => {
-    var fotosOld = this.state.fotosOld;
-    var fotos = [];
-    fotosOld.forEach((foto) => {
-      fotos.push(getImagen("fotosmamama", foto));
-    });
-    this.setState({ fotos });
-  };
-
-  componentDidMount() {
-    // Antes de consultar la API enciende el loader
-    this.setState({ loader: true });
-
+  cargarFotos = (album) => {
     // Si hay un hash va a buscar la información del examen a la API
-    getData("fotosmamama")
+    getData(album)
       .then((results) => {
         return results.json();
       })
@@ -30,9 +18,44 @@ class Main extends React.Component {
           alert(response.detail);
         } else {
           this.setState({ loader: false });
-          this.setState({ fotosOld: response.fotos }, this.procesarFotos);
+          this.setState({ fotos: response.fotos });
         }
       });
+  };
+
+  componentDidMount() {
+    // El loader ya está encendido desde el constructor
+
+    // Carga la URL
+    let host = window.location.href;
+    // Separa el sub-dominio
+    let parts = host.split("/");
+    // Obtiene el nombre del álbum
+    var album = parts[parts.length - 1];
+
+    this.cargarFotos(album);
+
+    // Función que se ejecuta cada 1 hora para refrescar las fotos
+    this.interval = setInterval(() => {
+      window.location.reload(false);
+    }, 1000*60*60);
+  }
+
+  // Función utilizada para el loop de 1 segundo para el timer
+  stop() {
+    clearInterval(this.interval);
+  }
+
+  componentWillUnmount() {
+    this.stop();
+  }
+
+  //Prendo el loader antes de que cargue el componente
+  constructor(props) {
+    super(props);
+    this.state = {
+      loader: true,
+    };
   }
 
   render() {
@@ -41,7 +64,7 @@ class Main extends React.Component {
         <div className="scrollable">
           <div className="content">
             {this.state && this.state.loader && (
-              <>
+              <div className={"loader-wrapper"}>
                 <p>
                   <img
                     className="loader"
@@ -49,12 +72,14 @@ class Main extends React.Component {
                     alt="loader"
                   />
                 </p>
-              </>
+                <p className={"centrado negrita"}>Cargando tus fotos. </p>
+                <p className={"centrado negrita"}>Sólo un segundito.</p>
+              </div>
             )}
             {this.state && !this.state.loader && this.state.fotos && (
               <div className="slide-container">
                 <Slide
-                  duration={180000}
+                  duration={1000*60*3}
                   transitionDuration={1000}
                   infinite={true}
                   indicators={false}
