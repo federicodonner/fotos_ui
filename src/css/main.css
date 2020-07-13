@@ -111,10 +111,6 @@ body {
   box-sizing: border-box;
 }
 
-.nav {
-  display: none !important;
-}
-
 .slide-container {
   margin: auto;
 }
@@ -188,9 +184,13 @@ body {
   margin-bottom: 45px;
 }
 
-.images-wrap {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+img {
+  max-width: 100vw;
+  max-height: 100vh;
+  object-fit: contain;
+}
+
+.images-wrap > div{
+  display:flex;
   justify-content: center;
 }
