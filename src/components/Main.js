@@ -15,11 +15,14 @@ class Main extends React.Component {
       })
       .then((response) => {
         if (response.status == "error") {
-          alert(response.detail);
+          this.setState({ loader: false, errorRequest: true });
         } else {
           this.setState({ loader: false });
           this.setState({ fotos: response.fotos });
         }
+      })
+      .catch((e) => {
+        this.setState({ loader: false, errorRequest: true });
       });
   };
 
@@ -38,7 +41,7 @@ class Main extends React.Component {
     // Función que se ejecuta cada 1 hora para refrescar las fotos
     this.interval = setInterval(() => {
       window.location.reload(false);
-    }, 1000*60*60);
+    }, 1000 * 60 * 60);
   }
 
   // Función utilizada para el loop de 1 segundo para el timer
@@ -55,6 +58,7 @@ class Main extends React.Component {
     super(props);
     this.state = {
       loader: true,
+      errorRequest: false,
     };
   }
 
@@ -76,10 +80,20 @@ class Main extends React.Component {
                 <p className={"centrado negrita"}>Sólo un segundito.</p>
               </div>
             )}
+            {this.state && this.state.errorRequest && (
+              <div className={"loader-wrapper"}>
+                <p className={"centrado negrita"}>
+                  Hubo un error al cargar tus fotos.
+                </p>
+                <p className={"centrado negrita"}>
+                  Por favor refresca la página.
+                </p>
+              </div>
+            )}
             {this.state && !this.state.loader && this.state.fotos && (
               <div className="slide-container">
                 <Slide
-                  duration={1000*60*3}
+                  duration={1000 * 60 * 3}
                   transitionDuration={1000}
                   infinite={true}
                   indicators={false}
