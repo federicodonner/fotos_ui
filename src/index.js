@@ -1,8 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
-import Main from "./components/Main";
+import Router from "./components/Router";
 
 import "./css/main.css";
 import "./css/slider.css";
 
-render(<Main />, document.querySelector("#main"));
+render(<Router />, document.querySelector("#main"));
