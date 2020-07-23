@@ -190,17 +190,28 @@ img {
   object-fit: contain;
 }
 
-.images-wrap > div{
-  display:flex;
+.images-wrap > div {
+  display: flex;
   justify-content: center;
 }
 
-.foto-old-wrapper{
-
+.foto-old-wrapper {
 }
 
-.foto-old{
-  margin-left:auto;
-  margin-right:auto;
-  display:block;
+.foto-old {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.intro-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  font-size: 12pt;
+}
+
+.margen-bottom {
+  margin-bottom: 30px;
 }
