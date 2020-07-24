@@ -196,6 +196,10 @@ img {
 }
 
 .foto-old-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
 }
 
 .foto-old {
@@ -209,7 +213,7 @@ img {
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  font-size: 12pt;
+  font-size: 14pt;
 }
 
 .margen-bottom {
