@@ -6,6 +6,26 @@ class Old extends React.Component {
     loader: true,
   };
 
+  fotoTouch = (event) => {
+    this.setState({
+      moviendo: true,
+      posicionInicial: event.touches[0].clientX,
+    });
+  };
+
+  fotoSwipe = (event) => {
+    if (this.state.moviendo) {
+      var posicionInicial = this.state.posicionInicial || null;
+      if (event.touches[0].clientX > posicionInicial) {
+        this.setState({ moviendo: false, posicionInicial: null });
+        this.fotoAnterior();
+      } else {
+        this.setState({ moviendo: false, posicionInicial: null });
+        this.cambiarFoto();
+      }
+    }
+  };
+
   cargarFotos = (request) => {
     // Si hay un hash va a buscar la información del examen a la API
     this.setState({
@@ -31,7 +51,16 @@ class Old extends React.Component {
     } else {
       fotoActual++;
     }
+    this.setState({ fotoActual });
+  };
 
+  fotoAnterior = () => {
+    var fotoActual = this.state.fotoActual;
+    if (fotoActual == 0) {
+      fotoActual = this.state.fotos.length - 1;
+    } else {
+      fotoActual--;
+    }
     this.setState({ fotoActual });
   };
 
@@ -101,7 +130,13 @@ class Old extends React.Component {
               </div>
             )}
             {this.state && !this.state.loader && this.state.fotos && (
-              <div className="foto-old-wrapper">
+              <div
+                className="foto-old-wrapper"
+                onTouchStart={(touchStartEvent) =>
+                  this.fotoTouch(touchStartEvent)
+                }
+                onTouchMove={(touchMoveEvent) => this.fotoSwipe(touchMoveEvent)}
+              >
                 <img
                   className={"foto-old"}
                   src={this.state.fotos[this.state.fotoActual]}
