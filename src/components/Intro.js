@@ -1,5 +1,4 @@
 import React from "react";
-import { getDataOld, getImagen } from "../fetchFunctions";
 
 class Intro extends React.Component {
   state: {

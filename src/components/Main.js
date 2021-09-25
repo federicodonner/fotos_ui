@@ -1,5 +1,5 @@
 import React from "react";
-import { getData, getImagen } from "../fetchFunctions";
+import { getData } from "../fetchFunctions";
 import { Slide } from "react-slideshow-image";
 
 class Main extends React.Component {
@@ -14,11 +14,18 @@ class Main extends React.Component {
         return results.json();
       })
       .then((response) => {
-        if (response.status == "error") {
+        if (response.status === "error") {
           this.setState({ loader: false, errorRequest: true });
         } else {
-          this.setState({ loader: false });
-          this.setState({ fotos: response.fotos });
+          var fotos = response.fotos;
+          for (let i = fotos.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            var auxiliar = fotos[i];
+            fotos[i] = fotos[j];
+            fotos[j] = auxiliar;
+            // [fotos[i], fotos[j]] = [fotos[j], fotos[i]];
+          }
+          this.setState({ loader: false, fotos });
         }
       })
       .catch((e) => {
@@ -76,7 +83,7 @@ class Main extends React.Component {
                     alt="loader"
                   />
                 </p>
-                <p className={"centrado negrita"}>Cargando tus fotos. </p>
+                <p className={"centrado negrita"}>Cargando tus fotos.</p>
                 <p className={"centrado negrita"}>Sólo un segundito.</p>
               </div>
             )}

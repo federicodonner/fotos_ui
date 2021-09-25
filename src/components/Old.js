@@ -1,5 +1,5 @@
 import React from "react";
-import { getDataOld, getImagen } from "../fetchFunctions";
+import { getDataOld } from "../fetchFunctions";
 
 class Old extends React.Component {
   state: {
@@ -28,9 +28,16 @@ class Old extends React.Component {
 
   cargarFotos = (request) => {
     // Si hay un hash va a buscar la información del examen a la API
+    var fotos = JSON.parse(request.response).fotos;
+    for (let i = fotos.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      var auxiliar = fotos[i];
+      fotos[i] = fotos[j];
+      fotos[j] = auxiliar;
+    }
     this.setState({
       loader: false,
-      fotos: JSON.parse(request.response).fotos,
+      fotos: fotos,
       fotoActual: 0,
       errorRequest: false,
     });
@@ -46,7 +53,7 @@ class Old extends React.Component {
 
   cambiarFoto = () => {
     var fotoActual = this.state.fotoActual;
-    if (fotoActual == this.state.fotos.length - 1) {
+    if (fotoActual === this.state.fotos.length - 1) {
       fotoActual = 0;
     } else {
       fotoActual++;
@@ -56,7 +63,7 @@ class Old extends React.Component {
 
   fotoAnterior = () => {
     var fotoActual = this.state.fotoActual;
-    if (fotoActual == 0) {
+    if (fotoActual === 0) {
       fotoActual = this.state.fotos.length - 1;
     } else {
       fotoActual--;
@@ -140,6 +147,7 @@ class Old extends React.Component {
                 <img
                   className={"foto-old"}
                   src={this.state.fotos[this.state.fotoActual]}
+                  alt="foto"
                 />
               </div>
             )}
