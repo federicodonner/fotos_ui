@@ -11,7 +11,7 @@ class Router extends React.Component {
       <Routes>
         <Route path="/" element={<Intro />} />
         <Route path="/:album" element={<Main />} />
-        <Route path="/old/:album" element={<Old />} />
+        {/* <Route path="/old/:album" element={<Old />} /> */}
         <Route element={<NotFound />} />
       </Routes>
     );
