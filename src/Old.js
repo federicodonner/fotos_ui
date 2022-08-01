@@ -56,9 +56,9 @@ export default function Old() {
       setTimeout(() => {
         setLoop(loop + 1);
       }, NEW_PICTURE_TIMER);
-      setFotoActual((fotoActual + 1) % fotos.length);
+      setFotoActual(((currentFoto) => currentFoto + 1) % fotos.length);
     }
-  }, [loop, fotos]);
+  }, [loop, fotos, PICTURES_PER_REFRESH, NEW_PICTURE_TIMER]);
 
   return (
     <div className="app-view cover">
