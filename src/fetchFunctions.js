@@ -30,7 +30,7 @@ export function getDataOld(endpoint, successCallback, rejectCallback) {
   xhr.open("GET", url);
 
   // set timeout
-  xhr.timeout = 30000;
+  // xhr.timeout = 30000;
 
   // request state change event
   xhr.onreadystatechange = function () {
