@@ -31,13 +31,14 @@ export default function Old() {
   // Randomiza el orden de las fotos
   function randomizarFotos(fotosRespuesta) {
     let fotosAux = JSON.parse(fotosRespuesta.response).fotos;
-    for (let i = fotosAux.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      var auxiliar = fotosAux[i];
-      fotosAux[i] = fotosAux[j];
-      fotosAux[j] = auxiliar;
-    }
-    setFotos(fotosAux);
+    alert(fotosAux);
+    // for (let i = fotosAux.length - 1; i > 0; i--) {
+    //   const j = Math.floor(Math.random() * (i + 1));
+    //   var auxiliar = fotosAux[i];
+    //   fotosAux[i] = fotosAux[j];
+    //   fotosAux[j] = auxiliar;
+    // }
+    // setFotos(fotosAux);
   }
 
   useEffect(() => {
