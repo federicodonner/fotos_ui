@@ -4,7 +4,7 @@ import loaderImg from "./images/loader.svg";
 
 export default function Old() {
   // Guarda las fotos en state
-  const [fotos, setFotos] = useState(null);
+  const [fotos] = useState(null);
   const [loader, setLoader] = useState(true);
   const [errorRequest, setErrorRequest] = useState(false);
   const [fotoActual, setFotoActual] = useState(0);
