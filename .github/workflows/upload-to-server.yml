@@ -32,4 +32,3 @@ jobs:
           local-dir: ./build/
           server-dir: fotos.federicodonner.com/public_html/
           dangerous-clean-slate: true
-          dry-run: true
