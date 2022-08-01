@@ -1,12 +1,11 @@
-import variables from "./var/variables.js";
-
 // Función que hacer un GET al endpoint indicado y devuelve los datos
 // Tiene un timeout de 5 segundos.
 export function getData(endpoint) {
+  const url = process.env.REACT_APP_API_URL + "/fotos/" + endpoint;
   var promise = Promise.race([
     // Genera dos promesas, una con el fetch y otra con el timeout de 5 segundos
     // la que termine primero resuelve
-    fetch(variables.api_url + "/fotos/" + endpoint, {
+    fetch(url, {
       method: "GET",
     }),
     new Promise(function (resolve, reject) {
@@ -17,7 +16,7 @@ export function getData(endpoint) {
 }
 
 export function getImagen(endpoint, nombre) {
-  return variables.imagenes_url + "/" + endpoint + "/" + nombre;
+  return process.env.REACT_APP_IMAGENES_URL + "/" + endpoint + "/" + nombre;
 }
 
 // Functión para obtener las fotos en dispositivos viejos
@@ -25,17 +24,13 @@ export function getImagen(endpoint, nombre) {
 // Si la API demora mucho falla silenciosamente.
 // Recibe la función de callback de éxito y la de rechazo
 export function getDataOld(endpoint, successCallback, rejectCallback) {
-  // return fetch(variables.api_url + "/fotos/" + endpoint, {
-  //   method: "GET",
-  // });
+  const url = process.env.REACT_APP_API_URL + "/fotos/" + endpoint;
 
-  // return fetch(variables.api_url + "/fotos/" + endpoint);
   let xhr = new XMLHttpRequest();
-  xhr.open("GET", variables.api_url + "/fotos/" + endpoint);
+  xhr.open("GET", url);
 
   // set timeout
   xhr.timeout = 30000;
-
 
   // request state change event
   xhr.onreadystatechange = function () {
@@ -46,8 +41,6 @@ export function getDataOld(endpoint, successCallback, rejectCallback) {
       successCallback(xhr);
 
       // request successful - show response
-      // return xhr.responseText;
-      // return "chau";
     } else {
       // request error
       rejectCallback(xhr);

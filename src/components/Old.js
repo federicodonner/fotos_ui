@@ -1,79 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { getDataOld } from "../fetchFunctions";
+import loaderImg from "../images/loader.svg";
 
-class Old extends React.Component {
-  state: {
-    loader: true,
-  };
+export default function Old() {
+  // Guarda las fotos en state
+  const [fotos, setFotos] = useState(null);
+  const [loader, setLoader] = useState(true);
+  const [errorRequest, setErrorRequest] = useState(false);
+  const [fotoActual, setFotoActual] = useState(0);
+  // Usada para controlar el tiempo de cada foto y para reiniciar
+  const [loop, setLoop] = useState(0);
 
-  fotoTouch = (event) => {
-    this.setState({
-      moviendo: true,
-      posicionInicial: event.touches[0].clientX,
-    });
-  };
+  const NEW_PICTURE_TIMER = 3 * 60 * 1000;
+  const PICTURES_PER_REFRESH = 20;
 
-  fotoSwipe = (event) => {
-    if (this.state.moviendo) {
-      var posicionInicial = this.state.posicionInicial || null;
-      if (event.touches[0].clientX > posicionInicial) {
-        this.setState({ moviendo: false, posicionInicial: null });
-        this.fotoAnterior();
-      } else {
-        this.setState({ moviendo: false, posicionInicial: null });
-        this.cambiarFoto();
-      }
-    }
-  };
-
-  cargarFotos = (request) => {
-    // Si hay un hash va a buscar la información del examen a la API
-    var fotos = JSON.parse(request.response).fotos;
-    for (let i = fotos.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      var auxiliar = fotos[i];
-      fotos[i] = fotos[j];
-      fotos[j] = auxiliar;
-    }
-    this.setState({
-      loader: false,
-      fotos: fotos,
-      fotoActual: 0,
-      errorRequest: false,
-    });
-
-    this.newPictureInterval = setInterval(() => {
-      this.cambiarFoto();
-    }, 3 * 60 * 1000);
-  };
-
-  fallaRequest = (request) => {
-    this.setState({ loader: false, errorRequest: true });
-  };
-
-  cambiarFoto = () => {
-    var fotoActual = this.state.fotoActual;
-    if (fotoActual === this.state.fotos.length - 1) {
-      fotoActual = 0;
-    } else {
-      fotoActual++;
-    }
-    this.setState({ fotoActual });
-  };
-
-  fotoAnterior = () => {
-    var fotoActual = this.state.fotoActual;
-    if (fotoActual === 0) {
-      fotoActual = this.state.fotos.length - 1;
-    } else {
-      fotoActual--;
-    }
-    this.setState({ fotoActual });
-  };
-
-  componentDidMount() {
-    // El loader ya está encendido desde el constructor
-
+  useEffect(() => {
     // Carga la URL
     let host = window.location.href;
     // Separa el sub-dominio
@@ -81,81 +22,74 @@ class Old extends React.Component {
     // Obtiene el nombre del álbum
     var album = parts[parts.length - 1];
 
-    getDataOld(album, this.cargarFotos, this.fallaRequest);
+    getDataOld(album, randomizarFotos, () => {
+      setLoader(false);
+      setErrorRequest(true);
+    });
+  }, []);
 
-    // Función que se ejecuta cada 1 hora para refrescar las fotos
-    this.interval = setInterval(() => {
-      window.location.reload(false);
-    }, 60 * 60 * 1000);
+  // Randomiza el orden de las fotos
+  function randomizarFotos(fotosRespuesta) {
+    let fotosAux = JSON.parse(fotosRespuesta.response).fotos;
+    for (let i = fotosAux.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      var auxiliar = fotosAux[i];
+      fotosAux[i] = fotosAux[j];
+      fotosAux[j] = auxiliar;
+    }
+    setFotos(fotosAux);
   }
 
-  // Función utilizada para el loop de 1 segundo para el timer
-  stop() {
-    clearInterval(this.interval);
-    clearInterval(this.newPictureInterval);
-  }
+  useEffect(() => {
+    if (fotos) {
+      setLoader(false);
+      // Necesito setear loop en 1 para que empiece a loopear
+      setLoop(1);
+    }
+  }, [fotos]);
 
-  componentWillUnmount() {
-    this.stop();
-  }
+  useEffect(() => {
+    if (loop > 0) {
+      if (loop === PICTURES_PER_REFRESH) {
+        window.location.reload(false);
+      }
+      setTimeout(() => {
+        setLoop(loop + 1);
+      }, NEW_PICTURE_TIMER);
+      setFotoActual((fotoActual + 1) % fotos.length);
+    }
+  }, [loop, fotos]);
 
-  //Prendo el loader antes de que cargue el componente
-  constructor(props) {
-    super(props);
-    this.state = {
-      loader: true,
-      errorRequest: false,
-    };
-  }
-
-  render() {
-    return (
-      <div className="app-view cover">
-        <div className="scrollable">
-          <div className="content">
-            {this.state && this.state.loader && (
-              <div className={"loader-wrapper"}>
-                <p>
-                  <img
-                    className="loader"
-                    src="/images/loader.svg"
-                    alt="loader"
-                  />
-                </p>
-                <p className={"centrado negrita"}>Cargando tus fotos. </p>
-                <p className={"centrado negrita"}>Sólo un segundito.</p>
-              </div>
-            )}
-            {this.state && this.state.errorRequest && (
-              <div className={"loader-wrapper"}>
-                <p className={"centrado negrita"}>
-                  Hubo un error al cargar tus fotos.
-                </p>
-                <p className={"centrado negrita"}>
-                  Por favor refresca la página.
-                </p>
-              </div>
-            )}
-            {this.state && !this.state.loader && this.state.fotos && (
-              <div
-                className="foto-old-wrapper"
-                onTouchStart={(touchStartEvent) =>
-                  this.fotoTouch(touchStartEvent)
-                }
-                onTouchMove={(touchMoveEvent) => this.fotoSwipe(touchMoveEvent)}
-              >
-                <img
-                  className={"foto-old"}
-                  src={this.state.fotos[this.state.fotoActual]}
-                  alt="foto"
-                />
-              </div>
-            )}
-          </div>
+  return (
+    <div className="app-view cover">
+      <div className="scrollable">
+        <div className="content">
+          {loader && (
+            <div className={"loader-wrapper"}>
+              <p>
+                <img className="loader" src={loaderImg} alt="loader" />
+              </p>
+              <p className={"centrado negrita"}>Cargando tus fotos. </p>
+              <p className={"centrado negrita"}>Sólo un segundito.</p>
+            </div>
+          )}
+          {errorRequest && (
+            <div className={"loader-wrapper"}>
+              <p className={"centrado negrita"}>
+                Hubo un error al cargar tus fotos.
+              </p>
+              <p className={"centrado negrita"}>
+                Por favor refresca la página.
+              </p>
+            </div>
+          )}
+          {!loader && fotos && (
+            <div className="foto-old-wrapper">
+              <img className={"foto-old"} src={fotos[fotoActual]} alt="foto" />
+            </div>
+          )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-export default Old;

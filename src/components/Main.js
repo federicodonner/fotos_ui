@@ -1,41 +1,20 @@
-import React from "react";
-import { getData } from "../fetchFunctions";
-import { Slide } from "react-slideshow-image";
+import React, { useState, useEffect } from "react";
+import { getDataOld } from "../fetchFunctions";
+import loaderImg from "../images/loader.svg";
 
-class Main extends React.Component {
-  state: {
-    loader: true,
-  };
+export default function Old() {
+  // Guarda las fotos en state
+  const [fotos, setFotos] = useState(null);
+  const [loader, setLoader] = useState(true);
+  const [errorRequest, setErrorRequest] = useState(false);
+  const [fotoActual, setFotoActual] = useState(0);
+  // Usada para controlar el tiempo de cada foto y para reiniciar
+  const [loop, setLoop] = useState(0);
 
-  cargarFotos = (album) => {
-    // Si hay un hash va a buscar la información del examen a la API
-    getData(album)
-      .then((results) => {
-        return results.json();
-      })
-      .then((response) => {
-        if (response.status === "error") {
-          this.setState({ loader: false, errorRequest: true });
-        } else {
-          var fotos = response.fotos;
-          for (let i = fotos.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            var auxiliar = fotos[i];
-            fotos[i] = fotos[j];
-            fotos[j] = auxiliar;
-            // [fotos[i], fotos[j]] = [fotos[j], fotos[i]];
-          }
-          this.setState({ loader: false, fotos });
-        }
-      })
-      .catch((e) => {
-        this.setState({ loader: false, errorRequest: true });
-      });
-  };
+  const NEW_PICTURE_TIMER = 3 * 60 * 1000;
+  const PICTURES_PER_REFRESH = 20;
 
-  componentDidMount() {
-    // El loader ya está encendido desde el constructor
-
+  useEffect(() => {
     // Carga la URL
     let host = window.location.href;
     // Separa el sub-dominio
@@ -43,78 +22,74 @@ class Main extends React.Component {
     // Obtiene el nombre del álbum
     var album = parts[parts.length - 1];
 
-    this.cargarFotos(album);
+    getDataOld(album, randomizarFotos, () => {
+      setLoader(false);
+      setErrorRequest(true);
+    });
+  }, []);
 
-    // Función que se ejecuta cada 1 hora para refrescar las fotos
-    this.interval = setInterval(() => {
-      window.location.reload(false);
-    }, 1000 * 60 * 60);
+  // Randomiza el orden de las fotos
+  function randomizarFotos(fotosRespuesta) {
+    let fotosAux = JSON.parse(fotosRespuesta.response).fotos;
+    for (let i = fotosAux.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      var auxiliar = fotosAux[i];
+      fotosAux[i] = fotosAux[j];
+      fotosAux[j] = auxiliar;
+    }
+    setFotos(fotosAux);
   }
 
-  // Función utilizada para el loop de 1 segundo para el timer
-  stop() {
-    clearInterval(this.interval);
-  }
+  useEffect(() => {
+    if (fotos) {
+      setLoader(false);
+      // Necesito setear loop en 1 para que empiece a loopear
+      setLoop(1);
+    }
+  }, [fotos]);
 
-  componentWillUnmount() {
-    this.stop();
-  }
+  useEffect(() => {
+    if (loop > 0) {
+      if (loop === PICTURES_PER_REFRESH) {
+        window.location.reload(false);
+      }
+      setTimeout(() => {
+        setLoop(loop + 1);
+      }, NEW_PICTURE_TIMER);
+      setFotoActual((fotoActual + 1) % fotos.length);
+    }
+  }, [loop, fotos]);
 
-  //Prendo el loader antes de que cargue el componente
-  constructor(props) {
-    super(props);
-    this.state = {
-      loader: true,
-      errorRequest: false,
-    };
-  }
-
-  render() {
-    return (
-      <div className="app-view cover">
-        <div className="scrollable">
-          <div className="content">
-            {this.state && this.state.loader && (
-              <div className={"loader-wrapper"}>
-                <p>
-                  <img
-                    className="loader"
-                    src="/images/loader.svg"
-                    alt="loader"
-                  />
-                </p>
-                <p className={"centrado negrita"}>Cargando tus fotos.</p>
-                <p className={"centrado negrita"}>Sólo un segundito.</p>
-              </div>
-            )}
-            {this.state && this.state.errorRequest && (
-              <div className={"loader-wrapper"}>
-                <p className={"centrado negrita"}>
-                  Hubo un error al cargar tus fotos.
-                </p>
-                <p className={"centrado negrita"}>
-                  Por favor refresca la página.
-                </p>
-              </div>
-            )}
-            {this.state && !this.state.loader && this.state.fotos && (
-              <div className="slide-container">
-                <Slide
-                  duration={1000 * 60 * 3}
-                  transitionDuration={1000}
-                  infinite={true}
-                  indicators={false}
-                  arrows={false}
-                  autoplay={true}
-                  images={this.state.fotos}
-                />
-              </div>
-            )}
-          </div>
+  return (
+    <div className="app-view cover">
+      <div className="scrollable">
+        <div className="content">
+          {loader && (
+            <div className={"loader-wrapper"}>
+              <p>
+                <img className="loader" src={loaderImg} alt="loader" />
+              </p>
+              <p className={"centrado negrita"}>Cargando tus fotos. </p>
+              <p className={"centrado negrita"}>Sólo un segundito.</p>
+            </div>
+          )}
+          {errorRequest && (
+            <div className={"loader-wrapper"}>
+              <p className={"centrado negrita"}>
+                Hubo un error al cargar tus fotos.
+              </p>
+              <p className={"centrado negrita"}>
+                Por favor refresca la página.
+              </p>
+            </div>
+          )}
+          {!loader && fotos && (
+            <div className="foto-old-wrapper">
+              <img className={"foto-old"} src={fotos[fotoActual]} alt="foto" />
+            </div>
+          )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-export default Main;
