@@ -22,6 +22,7 @@ export default function Old() {
     // Obtiene el nombre del álbum
     var album = parts[parts.length - 1];
 
+    alert("estoy en " + album);
     getDataOld(album, randomizarFotos, () => {
       setLoader(false);
       setErrorRequest(true);
