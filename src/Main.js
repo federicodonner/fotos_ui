@@ -56,7 +56,7 @@ export default function Old() {
       setTimeout(() => {
         setLoop(loop + 1);
       }, NEW_PICTURE_TIMER);
-      setFotoActual(((currentFoto) => currentFoto + 1) % fotos.length);
+      setFotoActual((currentFoto) => currentFoto + (1 % fotos.length));
     }
   }, [loop, fotos, PICTURES_PER_REFRESH, NEW_PICTURE_TIMER]);
 
