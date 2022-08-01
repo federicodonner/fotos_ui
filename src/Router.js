@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Main from "./Main";
-import Old from "./Old";
+// import Old from "./Old";
 import NotFound from "./NotFound";
 import Intro from "./Intro";
 
