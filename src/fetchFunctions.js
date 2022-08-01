@@ -34,6 +34,7 @@ export function getDataOld(endpoint, successCallback, rejectCallback) {
 
   // request state change event
   xhr.onreadystatechange = function () {
+    alert(url);
     alert(
       xhr.readyState + " status: " + xhr.status + " response:" + xhr.response
     );
