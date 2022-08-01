@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getDataOld } from "../fetchFunctions";
-import loaderImg from "../images/loader.svg";
+import { getDataOld } from "./fetchFunctions";
+import loaderImg from "./images/loader.svg";
 
 export default function Old() {
   // Guarda las fotos en state
